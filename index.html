@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Carewell Hospital Management System</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏥</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;700&family=IBM+Plex+Sans:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f6f6;--panel:#fff;--ink:#12303b;--mute:#5d7580;--line:#d8e2e4;--brand:#0f6b6f;--brand-ink:#fff;--free:#d9efe6;--busy:#12303b;--busy-ink:#fff;--warn:#c8472f;--soft:#e6f0f0;
+--head:'Bricolage Grotesque',system-ui,sans-serif;--body:'IBM Plex Sans',system-ui,sans-serif}
+@media (prefers-color-scheme:dark){:root{--bg:#0d1a1f;--panel:#14262d;--ink:#e4eef0;--mute:#8aa3ad;--line:#25404a;--brand:#4cc3c1;--brand-ink:#08201f;--free:#1a3b36;--busy:#4cc3c1;--busy-ink:#08201f;--warn:#ff8a70;--soft:#1b333b}}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:15px/1.5 var(--body);min-height:100vh}
+h1,h2,h3{font-family:var(--head);margin:0;line-height:1.15}
+h2{font-size:1.6rem;margin-bottom:.25rem}
+.app{display:grid;grid-template-columns:230px 1fr;min-height:100vh}
+nav{background:var(--panel);border-right:1px solid var(--line);padding:1.25rem 1rem;position:sticky;top:0;height:100vh}
+.logo{font-family:var(--head);font-size:1.3rem;font-weight:700;margin-bottom:1.5rem;display:flex;gap:.5rem;align-items:center}
+.logo i{width:26px;height:26px;border-radius:7px;background:var(--brand);display:grid;place-items:center;color:var(--brand-ink);font-style:normal;font-size:1.1rem}
+nav button{display:block;width:100%;text-align:left;background:none;border:0;color:var(--mute);font:500 15px var(--body);padding:.6rem .75rem;border-radius:8px;cursor:pointer}
+nav button:hover{background:var(--soft)}
+nav button[aria-current=page]{background:var(--brand);color:var(--brand-ink)}
+nav .reset{position:absolute;bottom:1rem;left:1rem;right:1rem;width:auto;font-size:13px}
+main{padding:1.75rem 2rem 3rem;max-width:1100px;width:100%}
+.sub{color:var(--mute);margin:0 0 1.5rem}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:1rem;margin-bottom:1.5rem}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1rem}
+.stat b{font:700 2rem var(--head);display:block}
+.stat span{color:var(--mute);font-size:13px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1.25rem;margin-bottom:1.25rem}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:1.25rem}
+.bar{height:10px;background:var(--soft);border-radius:6px;overflow:hidden;margin:.3rem 0 1rem}
+.bar div{height:100%;background:var(--brand)}
+.ward{margin-bottom:1.5rem}
+.ward h3{font-size:1.1rem;margin-bottom:.6rem}
+.beds{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:.6rem}
+.bed{border:1.5px solid var(--line);border-radius:10px;padding:.6rem;text-align:left;cursor:pointer;background:var(--free);color:var(--ink);font:inherit;min-height:74px}
+.bed small{display:block;color:var(--mute)}
+.bed.busy{background:var(--busy);color:var(--busy-ink);border-color:var(--busy)}
+.bed.busy small{color:inherit;opacity:.8}
+.bed:hover{outline:2px solid var(--brand);outline-offset:2px}
+button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--brand);outline-offset:2px}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:.6rem .5rem;border-bottom:1px solid var(--line);vertical-align:middle}
+th{color:var(--mute);font-weight:500;font-size:13px}
+.table-wrap{overflow-x:auto}
+.tag{display:inline-block;padding:.1rem .6rem;border-radius:999px;font-size:12px;background:var(--soft)}
+.tag.admitted,.tag.booked{background:var(--brand);color:var(--brand-ink)}
+.tag.cancelled{background:transparent;border:1px solid var(--warn);color:var(--warn)}
+form.row{display:flex;flex-wrap:wrap;gap:.6rem;align-items:end}
+label{display:grid;gap:.2rem;font-size:13px;color:var(--mute);flex:1 1 150px}
+input,select{font:15px var(--body);padding:.5rem .6rem;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);width:100%}
+.btn{font:500 14px var(--body);padding:.55rem 1rem;border-radius:8px;border:1px solid var(--brand);background:var(--brand);color:var(--brand-ink);cursor:pointer}
+.btn.ghost{background:transparent;color:var(--brand)}
+.btn.danger{background:transparent;border-color:var(--warn);color:var(--warn)}
+.btn.sm{padding:.25rem .6rem;font-size:13px}
+.docs{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1rem}
+.doc{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:1rem}
+.doc p{margin:.2rem 0 .8rem;color:var(--mute)}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;background:var(--mute);margin-right:.4rem}
+.dot.on{background:#2fae6b}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--ink);padding:1.5rem;width:min(420px,92vw)}
+dialog::backdrop{background:rgba(5,15,20,.55)}
+dialog form{display:grid;gap:.8rem}
+.empty{color:var(--mute);padding:1rem 0}
+#toast{position:fixed;bottom:1.25rem;right:1.25rem;background:var(--ink);color:var(--bg);padding:.6rem 1rem;border-radius:8px;opacity:0;transition:opacity .2s;pointer-events:none}
+#toast.show{opacity:1}
+@media (max-width:760px){.app{grid-template-columns:1fr}nav{position:static;height:auto;display:flex;flex-wrap:wrap;gap:.3rem;padding:.75rem}nav .logo{width:100%;margin:0 0 .3rem}nav button{width:auto}nav .reset{position:static}main{padding:1.25rem 1rem}.two{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <nav aria-label="Main">
+    <div class="logo"><i>+</i>Carewell</div>
+    <button data-v="overview">Overview</button>
+    <button data-v="wards">Ward map</button>
+    <button data-v="patients">Patients</button>
+    <button data-v="appts">Appointments</button>
+    <button data-v="doctors">Doctors</button>
+    <button class="reset" id="reset">Reset demo data</button>
+  </nav>
+  <main id="main"></main>
+</div>
+<dialog id="dlg"></dialog>
+<div id="toast" role="status"></div>
+<script>
+const KEY='carewell-hms-v1';
+const WARDS=[{id:'G',name:'General ward',n:10},{id:'I',name:'Intensive care',n:6},{id:'P',name:'Paediatrics',n:6}];
+const today=()=>new Date().toISOString().slice(0,10);
+const seed=()=>({
+ doctors:[{id:1,name:'Dr. Anita Menon',dept:'Cardiology',on:true},{id:2,name:'Dr. Rahul Varma',dept:'General medicine',on:true},{id:3,name:'Dr. Susan George',dept:'Paediatrics',on:true},{id:4,name:'Dr. Imran Khan',dept:'Orthopaedics',on:false},{id:5,name:'Dr. Lekha Nair',dept:'Critical care',on:true}],
+ patients:[
+  {id:1,name:'Arjun Pillai',age:54,condition:'Chest pain',doctor:1,bed:'I1',status:'admitted'},
+  {id:2,name:'Meera Joseph',age:31,condition:'Typhoid fever',doctor:2,bed:'G3',status:'admitted'},
+  {id:3,name:'Kiran Das',age:7,condition:'Asthma attack',doctor:3,bed:'P2',status:'admitted'},
+  {id:4,name:'Sunil Thomas',age:62,condition:'Knee replacement review',doctor:4,bed:null,status:'outpatient'},
+  {id:5,name:'Fathima Rasheed',age:45,condition:'Diabetes check-up',doctor:2,bed:null,status:'outpatient'}],
+ appts:[
+  {id:1,patient:4,doctor:4,date:today(),time:'10:30',status:'booked'},
+  {id:2,patient:5,doctor:2,date:today(),time:'11:15',status:'booked'}],
+ next:{p:6,a:3,d:6}
+});
+let S;
+try{S=JSON.parse(localStorage.getItem(KEY))||seed()}catch(e){S=seed()}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const doc=id=>S.doctors.find(d=>d.id==id);
+const pat=id=>S.patients.find(p=>p.id==id);
+const beds=()=>WARDS.flatMap(w=>Array.from({length:w.n},(_,i)=>({id:w.id+(i+1),ward:w.id,label:'Bed '+(i+1)})));
+const patientIn=b=>S.patients.find(p=>p.bed===b);
+function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>t.classList.remove('show'),2200)}
+let view='overview',q='';
+
+const views={
+overview(){
+ const all=beds(),used=all.filter(b=>patientIn(b.id)).length;
+ const ta=S.appts.filter(a=>a.date===today()&&a.status==='booked');
+ const up=[...S.appts].filter(a=>a.status==='booked').sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,5);
+ return `<h2>Overview</h2><p class="sub">Live picture of beds, patients and today's schedule.</p>
+ <div class="stats">
+  <div class="stat"><b>${S.patients.filter(p=>p.status==='admitted').length}</b><span>Patients admitted</span></div>
+  <div class="stat"><b>${all.length-used}</b><span>Beds free of ${all.length}</span></div>
+  <div class="stat"><b>${ta.length}</b><span>Appointments today</span></div>
+  <div class="stat"><b>${S.doctors.filter(d=>d.on).length}</b><span>Doctors on duty</span></div></div>
+ <div class="two"><div class="panel"><h3>Bed occupancy</h3><br>${WARDS.map(w=>{const t=all.filter(b=>b.ward===w.id),u=t.filter(b=>patientIn(b.id)).length;return `<div>${w.name}: ${u} of ${t.length} in use</div><div class="bar"><div style="width:${u/t.length*100}%"></div></div>`}).join('')}</div>
+ <div class="panel"><h3>Next appointments</h3>${up.length?`<table>${up.map(a=>`<tr><td>${esc(pat(a.patient)?.name||'Unknown')}</td><td>${esc(doc(a.doctor)?.name||'')}</td><td>${a.date===today()?'Today':a.date} ${a.time}</td></tr>`).join('')}</table>`:'<p class="empty">Nothing booked. Add one under Appointments.</p>'}</div></div>`;
+},
+wards(){
+ return `<h2>Ward map</h2><p class="sub">Select a free bed to admit a patient, or an occupied bed to view or discharge.</p>`+WARDS.map(w=>`<section class="ward"><h3>${w.name}</h3><div class="beds">${beds().filter(b=>b.ward===w.id).map(b=>{const p=patientIn(b.id);return `<button class="bed ${p?'busy':''}" data-bed="${b.id}">${b.label}<small>${p?esc(p.name):'Free'}</small></button>`}).join('')}</div></section>`).join('');
+},
+patients(){
+ const list=S.patients.filter(p=>(p.name+p.condition).toLowerCase().includes(q.toLowerCase()));
+ return `<h2>Patients</h2><p class="sub">Register patients and track their status.</p>
+ <form class="panel row" id="addPatient"><label>Name<input name="name" required></label><label>Age<input name="age" type="number" min="0" max="120" required></label><label>Condition<input name="condition" required></label>
+ <label>Doctor<select name="doctor">${S.doctors.map(d=>`<option value="${d.id}">${esc(d.name)}</option>`).join('')}</select></label><button class="btn">Register patient</button></form>
+ <div class="panel"><label>Search patients<input id="search" value="${esc(q)}" placeholder="Name or condition"></label><br>
+ ${list.length?`<div class="table-wrap"><table><tr><th>Name</th><th>Age</th><th>Condition</th><th>Doctor</th><th>Status</th><th></th></tr>${list.map(p=>`<tr><td>${esc(p.name)}</td><td>${p.age}</td><td>${esc(p.condition)}</td><td>${esc(doc(p.doctor)?.name||'')}</td><td><span class="tag ${p.status}">${p.status}${p.bed?' · '+p.bed:''}</span></td><td>${p.bed?`<button class="btn ghost sm" data-discharge="${p.id}">Discharge</button> `:''}<button class="btn danger sm" data-del="${p.id}">Remove</button></td></tr>`).join('')}</table></div>`:'<p class="empty">No patients match. Clear the search or register a new patient.</p>'}</div>`;
+},
+appts(){
+ const list=[...S.appts].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+ return `<h2>Appointments</h2><p class="sub">Book visits and keep the day on track.</p>
+ <form class="panel row" id="addAppt"><label>Patient<select name="patient" required>${S.patients.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select></label>
+ <label>Doctor<select name="doctor">${S.doctors.filter(d=>d.on).map(d=>`<option value="${d.id}">${esc(d.name)} (${esc(d.dept)})</option>`).join('')}</select></label>
+ <label>Date<input name="date" type="date" value="${today()}" min="${today()}" required></label><label>Time<input name="time" type="time" value="09:00" required></label><button class="btn">Book appointment</button></form>
+ <div class="panel">${list.length?`<div class="table-wrap"><table><tr><th>When</th><th>Patient</th><th>Doctor</th><th>Status</th><th></th></tr>${list.map(a=>`<tr><td>${a.date} ${a.time}</td><td>${esc(pat(a.patient)?.name||'Removed')}</td><td>${esc(doc(a.doctor)?.name||'')}</td><td><span class="tag ${a.status}">${a.status}</span></td><td>${a.status==='booked'?`<button class="btn ghost sm" data-done="${a.id}">Mark done</button> <button class="btn danger sm" data-cancel="${a.id}">Cancel</button>`:''}</td></tr>`).join('')}</table></div>`:'<p class="empty">No appointments yet. Book the first one above.</p>'}</div>`;
+},
+doctors(){
+ return `<h2>Doctors</h2><p class="sub">Set who is on duty. Only on-duty doctors can be booked.</p><div class="docs">${S.doctors.map(d=>`<div class="doc"><h3>${esc(d.name)}</h3><p>${esc(d.dept)} · ${S.patients.filter(p=>p.doctor==d.id).length} patients</p><span><i class="dot ${d.on?'on':''}"></i>${d.on?'On duty':'Off duty'}</span> <button class="btn ghost sm" data-duty="${d.id}">${d.on?'Mark off duty':'Mark on duty'}</button></div>`).join('')}</div>`;
+}};
+
+function render(){
+ $('#main').innerHTML=views[view]();
+ document.querySelectorAll('nav [data-v]').forEach(b=>b.toggleAttribute('aria-current',b.dataset.v===view)||b.removeAttribute('aria-current'));
+ document.querySelectorAll('nav [data-v]').forEach(b=>{if(b.dataset.v===view)b.setAttribute('aria-current','page')});
+ save();
+}
+function bedDialog(id){
+ const p=patientIn(id),d=$('#dlg');
+ if(p){d.innerHTML=`<h3>${id} · ${esc(p.name)}</h3><p>${p.age} yrs · ${esc(p.condition)}<br>${esc(doc(p.doctor)?.name||'')}</p><form method="dialog" style="display:flex;gap:.5rem"><button class="btn danger" value="discharge">Discharge patient</button><button class="btn ghost" value="close">Close</button></form>`;
+  d.onclose=()=>{if(d.returnValue==='discharge'){p.bed=null;p.status='outpatient';toast(p.name+' discharged');render()}d.returnValue=''};}
+ else{const w=S.patients.filter(x=>!x.bed);
+  d.innerHTML=`<h3>Admit to ${id}</h3>${w.length?`<form method="dialog"><label>Patient<select id="pick">${w.map(x=>`<option value="${x.id}">${esc(x.name)} – ${esc(x.condition)}</option>`).join('')}</select></label><div style="display:flex;gap:.5rem"><button class="btn" value="admit">Admit patient</button><button class="btn ghost" value="close">Cancel</button></div></form>`:`<p class="empty">Every registered patient already has a bed. Register a new patient first.</p><form method="dialog"><button class="btn ghost">Close</button></form>`}`;
+  d.onclose=()=>{if(d.returnValue==='admit'){const x=pat($('#pick').value);x.bed=id;x.status='admitted';toast(x.name+' admitted to '+id);render()}d.returnValue=''};}
+ d.showModal();
+}
+document.addEventListener('click',e=>{
+ const t=e.target.closest('button');if(!t)return;
+ const ds=t.dataset;
+ if(ds.v){view=ds.v;render();return}
+ if(ds.bed)return bedDialog(ds.bed);
+ if(ds.discharge){const p=pat(ds.discharge);p.bed=null;p.status='outpatient';toast(p.name+' discharged')}
+ else if(ds.del){S.patients=S.patients.filter(p=>p.id!=ds.del);S.appts=S.appts.filter(a=>a.patient!=ds.del);toast('Patient removed')}
+ else if(ds.done){S.appts.find(a=>a.id==ds.done).status='done';toast('Appointment marked done')}
+ else if(ds.cancel){S.appts.find(a=>a.id==ds.cancel).status='cancelled';toast('Appointment cancelled')}
+ else if(ds.duty){const d=doc(ds.duty);d.on=!d.on;toast(d.name+(d.on?' is on duty':' is off duty'))}
+ else if(t.id==='reset'){if(confirm('Reset all data to the demo set?')){S=seed();toast('Demo data restored')}else return}
+ else return;
+ render();
+});
+document.addEventListener('submit',e=>{
+ const f=e.target,v=Object.fromEntries(new FormData(f));
+ if(f.id==='addPatient'){e.preventDefault();S.patients.push({id:S.next.p++,name:v.name.trim(),age:+v.age,condition:v.condition.trim(),doctor:+v.doctor,bed:null,status:'outpatient'});toast('Patient registered');render()}
+ if(f.id==='addAppt'){e.preventDefault();S.appts.push({id:S.next.a++,patient:+v.patient,doctor:+v.doctor,date:v.date,time:v.time,status:'booked'});toast('Appointment booked');render()}
+});
+document.addEventListener('input',e=>{if(e.target.id==='search'){q=e.target.value;const pos=q.length;render();const s=$('#search');s.focus();s.setSelectionRange(pos,pos)}});
+render();
+</script>
+</body>
+</html>
